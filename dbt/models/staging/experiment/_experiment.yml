@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: experiment
+    schema: raw
+    description: Simulated win-back test, written by qcom/experiment.py.
+    tables:
+      - name: ab_users
+      - name: ab_orders
+
+models:
+  - name: stg_experiment__users
+    description: One row per user per scenario (clean, srm_bug).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: {combination_of_columns: ['scenario', 'user_id']}
+    columns:
+      - name: variant
+        data_tests:
+          - accepted_values: {arguments: {values: ['control', 'treatment']}}
+      - name: scenario
+        data_tests:
+          - accepted_values: {arguments: {values: ['clean', 'srm_bug']}}
+  - name: stg_experiment__orders
+    description: Orders placed by test users inside the 30-day window.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: {combination_of_columns: ['scenario', 'user_id', 'order_number']}
