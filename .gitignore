@@ -1,0 +1,11 @@
+.venv/
+data/
+.env
+__pycache__/
+.pytest_cache/
+dbt/target/
+dbt/logs/
+logs/
+.DS_Store
+dbt/.user.yml
+dbt_packages/

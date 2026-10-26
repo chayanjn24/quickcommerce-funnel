@@ -1,0 +1,85 @@
+version: 2
+
+sources:
+  - name: blinkit
+    schema: raw
+    description: Blinkit sales dataset (Kaggle, akxiit/blinkit-sales-dataset, MIT licence).
+    tables:
+      - name: blinkit_orders
+      - name: blinkit_order_items
+      - name: blinkit_customers
+      - name: blinkit_products
+      - name: blinkit_delivery_performance
+      - name: blinkit_marketing_performance
+      - name: blinkit_customer_feedback
+
+models:
+  - name: stg_blinkit__orders
+    description: One row per Blinkit order.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('stg_blinkit__customers'), field: customer_id}}
+      - name: delivery_status
+        data_tests:
+          - accepted_values: {arguments: {values: ['On Time', 'Slightly Delayed', 'Significantly Delayed']}}
+      - name: payment_method
+        data_tests:
+          - accepted_values: {arguments: {values: ['Cash', 'Card', 'UPI', 'Wallet']}}
+      - name: order_total
+        data_tests: [not_null]
+
+  - name: stg_blinkit__order_items
+    description: One row per product line in an order.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: {combination_of_columns: ['order_id', 'product_id']}
+    columns:
+      - name: order_id
+        data_tests:
+          - relationships: {arguments: {to: ref('stg_blinkit__orders'), field: order_id}}
+      - name: product_id
+        data_tests:
+          - relationships: {arguments: {to: ref('stg_blinkit__products'), field: product_id}}
+
+  - name: stg_blinkit__customers
+    description: One row per customer. Personal fields removed.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+
+  - name: stg_blinkit__products
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: stg_blinkit__delivery_performance
+    description: One row per order with promised vs actual delivery.
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - relationships: {arguments: {to: ref('stg_blinkit__orders'), field: order_id}}
+
+  - name: stg_blinkit__marketing_performance
+    description: One row per campaign run per day.
+    columns:
+      - name: campaign_id
+        data_tests: [unique, not_null]
+      - name: channel
+        data_tests:
+          - accepted_values: {arguments: {values: ['App', 'Email', 'SMS', 'Social Media']}}
+
+  - name: stg_blinkit__customer_feedback
+    columns:
+      - name: feedback_id
+        data_tests: [unique, not_null]
+      - name: order_id
+        data_tests:
+          - relationships: {arguments: {to: ref('stg_blinkit__orders'), field: order_id}}
+      - name: rating
+        data_tests:
+          - accepted_values: {arguments: {values: [1, 2, 3, 4, 5], quote: false}}

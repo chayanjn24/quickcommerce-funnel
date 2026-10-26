@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: amazon
+    schema: raw
+    description: Amazon Sale Report, one Indian apparel seller on Amazon.in, 31 Mar to 29 Jun 2022 (Kaggle, thedevastator/unlock-profits-with-e-commerce-sales-data; original upload by Anil Sharma on data.world).
+    tables:
+      - name: amazon_sale_report
+
+models:
+  - name: stg_amazon__order_lines
+    description: One row per order line (order_id + sku), duplicates removed, state names cleaned.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: {combination_of_columns: ['order_id', 'sku']}
+    columns:
+      - name: order_id
+        data_tests: [not_null]
+      - name: fulfilment
+        data_tests:
+          - accepted_values: {arguments: {values: ['Amazon', 'Merchant']}}
+      - name: ordered_on
+        data_tests: [not_null]

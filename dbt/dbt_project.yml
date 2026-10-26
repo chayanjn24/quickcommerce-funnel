@@ -1,0 +1,20 @@
+name: qcom
+version: "1.0.0"
+config-version: 2
+profile: qcom
+
+models:
+  qcom:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table
+
+seeds:
+  qcom:
+    +schema: seeds
