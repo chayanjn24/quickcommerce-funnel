@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: Blinkit orders, one row per order, with delivery and feedback attached.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_customers'), field: customer_id}}
+      - name: product_id
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_products'), field: product_id}}
+      - name: order_date
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_date'), field: date_day}}
+      - name: minutes_vs_promise
+        data_tests: [not_null]
+      - name: rating
+        data_tests: [not_null]
+
+  - name: dim_customers
+    description: Blinkit customers with order counts and revenue recomputed from orders.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+
+  - name: dim_products
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: dim_date
+    columns:
+      - name: date_day
+        data_tests: [unique, not_null]
+
+  - name: fct_amazon_orders
+    description: Amazon India orders, one row per order, with the furthest funnel stage reached.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: ordered_on
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_date'), field: date_day}}
+      - name: outcome
+        data_tests:
+          - accepted_values: {arguments: {values: ['Cancelled', 'Pending', 'Shipped', 'Delivered', 'Returned', 'Lost or damaged']}}
+
+  - name: campaign_funnel
+    description: Blinkit campaign funnel by month, campaign, channel and audience. ROAS recomputed.
+  - name: campaign_funnel_stages
+    description: Campaign funnel, one row per stage.
+  - name: amazon_funnel
+    description: Amazon order funnel, one row per stage, overall and by fulfilment.
+  - name: amazon_cancellations
+    description: Cancel and return rates by state, category, fulfilment, customer type and month.
+  - name: cohorts
+    description: Monthly acquisition cohorts by first order month. Last (partial) month excluded.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: {combination_of_columns: ['cohort_month', 'months_since_first']}
+  - name: rfm
+    description: RFM quintile scores and segments per ordering customer.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: rfm_segment
+        data_tests: [not_null]
+  - name: delivery_sla
+    description: On-time rate, minutes vs promise and rating by month, distance, hour, weekday, category and promised window.
+  - name: experiment_users
+    description: Win-back test result per user, for both runs (clean and with the logging bug).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: {combination_of_columns: ['scenario', 'user_id']}
