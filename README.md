@@ -1,10 +1,10 @@
 # Quick-Commerce Funnel
 
-Where do online orders drop out, which customers come back, and does a discount bring lapsed customers back at a profit? I wanted Indian data for this, so I used two Kaggle datasets: Amazon India orders from one clothing seller, and Blinkit orders, customers and campaigns. I modelled both in Postgres with dbt, built a Metabase dashboard on top, and analysed a win-back offer as an A/B test in Python.
+Where do online orders drop out, which customers come back, and does a discount bring lapsed customers back at a profit? I wanted Indian data for this, so I used two Kaggle datasets: Amazon India orders from one clothing seller, and Blinkit orders, customers and campaigns. I modelled both in Postgres with dbt, built dashboards in Tableau Public and Metabase on top, and analysed a win-back offer as an A/B test in Python.
 
-**[Case study](https://chayangulgulia.vercel.app/work/quick-commerce)**
+**[Dashboard on Tableau Public](https://public.tableau.com/app/profile/chayan.gulgulia/viz/Quick-CommerceFunnel/AmazonIndia)** · **[Case study](https://chayangulgulia.vercel.app/work/quick-commerce)**
 
-![Amazon India tab of the Metabase dashboard](images/dashboard_amazon.png)
+![Amazon India tab of the Tableau dashboard](images/tableau_amazon.png)
 
 ## Results
 
@@ -45,9 +45,15 @@ The offer: customers who haven't ordered for 60+ days get ₹100 off their next 
 
 ![Win-back test result against the true effect and break-even](images/experiment.png)
 
-## Dashboard
+## Dashboards
 
-Four tabs in Metabase: [Amazon India](images/dashboard_amazon.png), [Blinkit customers](images/dashboard_blinkit.png), [marketing and delivery](images/dashboard_marketing.png) and the [win-back test](images/dashboard_experiment.png). Metabase reads through a read-only login that can see the finished tables but not the raw data.
+**Tableau Public ([live](https://public.tableau.com/app/profile/chayan.gulgulia/viz/Quick-CommerceFunnel/AmazonIndia)):** three tabs, one for each part of the analysis: Amazon India, Blinkit customers and the win-back test. Every chart has hover details. It reads small extracts of the finished dbt tables.
+
+![Blinkit tab of the Tableau dashboard](images/tableau_blinkit.png)
+
+![Win-back tab of the Tableau dashboard](images/tableau_winback.png)
+
+**Metabase:** the working dashboard I used while building this, connected straight to Postgres. Four tabs: [Amazon India](images/dashboard_amazon.png), [Blinkit customers](images/dashboard_blinkit.png), [marketing and delivery](images/dashboard_marketing.png) and the [win-back test](images/dashboard_experiment.png). It reads through a read-only login that can see the finished tables but not the raw data. Metabase needs a server with about 1 GB of memory, so it runs locally and the screenshots are here instead.
 
 ## Data
 
