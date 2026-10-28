@@ -47,7 +47,7 @@ The offer: customers who haven't ordered for 60+ days get ₹100 off their next 
 
 ## Dashboards
 
-**Tableau Public ([live](https://public.tableau.com/app/profile/chayan.gulgulia/viz/Quick-CommerceFunnel/AmazonIndia)):** three tabs, one for each part of the analysis: Amazon India, Blinkit customers and the win-back test. Every chart has hover details. It reads small extracts of the finished dbt tables.
+**Tableau Public ([live](https://public.tableau.com/app/profile/chayan.gulgulia/viz/Quick-CommerceFunnel/AmazonIndia)):** three tabs, one for each part of the analysis: Amazon India, Blinkit customers and the win-back test. Filters for dates, who ships, buyer, product, category, payment, RFM segment, campaign and audience, and the headline numbers follow them; click a state to filter the Amazon tab. The win-back tab has a discount slider that redoes the cost and break-even maths. Every chart has hover details. It reads small extracts of the finished dbt tables.
 
 ![Blinkit tab of the Tableau dashboard](images/tableau_blinkit.png)
 
